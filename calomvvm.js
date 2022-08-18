@@ -314,6 +314,9 @@ abc = "http://" + abc;
         })
 
         applySameModelKeyupChange("input[type=text]")
+        applySameModelKeyupChange("input[type=date]")
+        applySameModelKeyupChange("input[type=password]")
+        applySameModelKeyupChange("input[type=number]")
         applySameModelKeyupChange("textarea")
         applySameModelClickChange("input[type=checkbox]")
         applySameModelClickChange("input[type=radio]", function(el) {
