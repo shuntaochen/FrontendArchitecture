@@ -560,7 +560,8 @@ if (!abc || !ghi) calo = undefined;
         }
         root.innerHTML = ''
         var hm = stringToHTML(decodeURI(calo.templateStore[route.toLowerCase()]))
-        var script = hm.getElementsByTagName('script')[0] ? .text;
+        var scriptBlock = hm.getElementsByTagName('script')[0]
+        var script = scriptBlock?.text
         root.appendChild(hm)
         if (script)
             eval(script)
