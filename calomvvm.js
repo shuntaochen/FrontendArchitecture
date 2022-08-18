@@ -371,6 +371,9 @@ abc = "http://" + abc;
 
     function SetValue(el, val) {
         if (el.tagName === "INPUT" && el.type === "text") el.value = val
+        if (el.tagName === "INPUT" && el.type === "password") el.value = val
+        if (el.tagName === "INPUT" && el.type === "date") el.value = val
+        if (el.tagName === "INPUT" && el.type === "number") el.value = val
         if (el.tagName === "TEXTAREA") el.value = val
         if (el.tagName === "A") el.href = val
         if (el.tagName === "INPUT" && el.type === "checkbox") el.checked = val
