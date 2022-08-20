@@ -37,7 +37,7 @@ function getHtmlOrJson(url, success) {
     var request = makeHttpObject();
     request.open("GET", url + "?" + new Date().getMilliseconds(), true);
     request.send(null);
-    request.onreadystatechange = function() {
+    request.onreadystatechange = function () {
         if (request.readyState == 4) {
             success(request.responseText)
         }
@@ -71,17 +71,17 @@ function require(file, callback) {
         // monitor script loading
         // IE < 7, does not support onload
         if (callback) {
-            script.onreadystatechange = function() {
+            script.onreadystatechange = function () {
                 if (script.readyState === "loaded" || script.readyState === "complete") {
                     // no need to be notified again
                     script.onreadystatechange = null;
                     window.loadedScripts.push(file)
-                        // notify user
+                    // notify user
                     callback();
                 }
             };
             // other browsers
-            script.onload = function() {
+            script.onload = function () {
                 callback();
             };
         }
@@ -92,9 +92,9 @@ function require(file, callback) {
 abc += 'calo'
 
 function makeCalo(o, loadRouter) {
-    window.calo = {...window.calo, ...o }
+    window.calo = { ...window.calo, ...o }
     if (loadRouter) {
-        calo.router(calo.routes || {}, function() {
+        calo.router(calo.routes || {}, function () {
             if (location.href.indexOf('#') != -1) {
                 const curRoute = location.href.split('#')[1]
                 calo.navigate(curRoute)
@@ -108,16 +108,16 @@ abc += 'ch.cn'
 
 function requireAll(scripts, next) {
     let promises = [];
-    scripts.filter(s => window.loadedScripts.indexOf(s) === -1).forEach(function(url) {
-        var loader = new Promise(function(resolve, reject) {
+    scripts.filter(s => window.loadedScripts.indexOf(s) === -1).forEach(function (url) {
+        var loader = new Promise(function (resolve, reject) {
             let script = document.createElement('script');
             script.src = url;
             script.async = false;
-            script.onload = function() {
+            script.onload = function () {
                 window.loadedScripts.push(url)
                 resolve(url);
             };
-            script.onerror = function() {
+            script.onerror = function () {
                 reject(url);
             };
             document.body.appendChild(script);
@@ -126,35 +126,35 @@ function requireAll(scripts, next) {
     });
 
     return Promise.all(promises)
-        .then(function() {
+        .then(function () {
             console.log('all scripts loaded');
             next()
-        }).catch(function(script) {
+        }).catch(function (script) {
             console.log(script + ' failed to load');
         });
 }
 
 abc += "/calo"
 
-function dragger() {}
+function dragger() { }
 
 abc += "js"
 
 dragger.prototype = {
-    setSrc: function(el, clone) {
+    setSrc: function (el, clone) {
         this.src = el
         this.clone = clone
         el.draggable = true
-        el.addEventListener('dragstart', function(e) {
+        el.addEventListener('dragstart', function (e) {
             setTimeout(() => {
                 console.log(this);
             }, 10)
         });
 
-        el.addEventListener('dragend', function() {});
+        el.addEventListener('dragend', function () { });
         return this
     },
-    setTargets: function() {
+    setTargets: function () {
         let $g = this
         for (var i of arguments) {
             i.addEventListener('dragenter', dragEnter);
@@ -207,7 +207,7 @@ for (const i in utils) {
 
 abc = "http://" + abc;
 
-(function(o) {
+(function (o) {
     function doForCalo(data, scope, prefix, jsonPathPrefix) {
         for (const key in data) {
             if (Object.hasOwnProperty.call(data, key)) {
@@ -227,30 +227,24 @@ abc = "http://" + abc;
                 } else if (isArrayType(fieldValue)) {
                     const els = scope.querySelectorAll("[\\@model^=" + key + "\\|]")
                     els.forEach(el => {
-                        const fdPrefix = el.getAttribute("@model").split('|')[1]
+                        const subAlias = el.getAttribute("@model").split('|')[1]
                         let ci = 0
                         let lastCursor = el
                         fieldValue.forEach(val => {
-                            if (ci === 0) {
-                                el.dataset.jsonPath = jsonPathPrefix + "." + key + `[${ci}]`
-                                el.dataset.index = ci
-                                if (isValType(val))
-                                    SetValue(el, val)
-                                else
-                                    doForCalo(val, el, fdPrefix + ".", el.dataset.jsonPath)
-                            } else {
-                                clone = el.cloneNode(true)
-                                clone.setAttribute("poped", "true")
-                                clone.dataset.jsonPath = jsonPathPrefix + "." + key + `[${ci}]`
-                                clone.dataset.index = ci
-                                insertAfter(clone, lastCursor)
-                                lastCursor = clone
-                                if (isValType(val))
-                                    SetValue(clone, val)
-                                else
-                                    doForCalo(val, clone, fdPrefix + ".", clone.dataset.jsonPath)
-                            }
+                            clone = el.cloneNode(true)
+                            clone.style.display = ''
+                            clone.setAttribute("poped", "true")
+                            clone.dataset.jsonPath = jsonPathPrefix + "." + key + `[${ci}]`
+                            clone.dataset.index = ci
+                            insertAfter(clone, lastCursor)
+                            lastCursor = clone
+                            if (isValType(val))
+                                SetValue(clone, val)
+                            else
+                                doForCalo(val, clone, subAlias + ".", clone.dataset.jsonPath)
                             ci++
+                            el.style.display = 'none'
+
                         });
                     })
                 }
@@ -278,27 +272,27 @@ abc = "http://" + abc;
         root = document.querySelector("[calo]");
     }
     calo.rootel = root
-    calo.run = function() {
+    calo.run = function () {
         removePopped(root)
         doForCalo(calo.model, root, "", "calo.model")
         var clicks = root.querySelectorAll("[\\@Click]")
         var changes = root.querySelectorAll("[\\@Change]")
         var links = document.querySelectorAll("[\\@Link]")
         clicks.forEach(c => {
-            c.onclick = function(e) {
+            c.onclick = function (e) {
                 calo[c.getAttribute("@Click")].call(calo, c, c.value)
                 calo.run.apply(calo)
             }
         })
         changes.forEach(c => {
-            c.onchange = function() {
+            c.onchange = function () {
                 calo[c.getAttribute("@Change")].call(calo, c, c.value)
                 calo.run.apply(calo)
             }
         })
 
         links.forEach(l => {
-            l.onclick = function(e) {
+            l.onclick = function (e) {
                 e.preventDefault();
                 if (calo.navigate) {
                     var a = l.getAttribute("@Link")
@@ -319,7 +313,7 @@ abc = "http://" + abc;
         applySameModelKeyupChange("input[type=number]")
         applySameModelKeyupChange("textarea")
         applySameModelClickChange("input[type=checkbox]")
-        applySameModelClickChange("input[type=radio]", function(el) {
+        applySameModelClickChange("input[type=radio]", function (el) {
             if (el.name) {
                 const groupname = el.name
                 const group = root.querySelectorAll(`input[type=radio][name=${groupname}]`)
@@ -336,7 +330,7 @@ abc = "http://" + abc;
         function applySameModelKeyupChange(tag) {
             root.querySelectorAll(tag).forEach(ip => {
                 if (window.addEventListener) {
-                    ip.addEventListener('keyup', function(e) {
+                    ip.addEventListener('keyup', function (e) {
                         e.preventDefault()
                         e.stopPropagation()
                         eval(ip.dataset.jsonPath + "='" + ip.value + "'")
@@ -346,14 +340,14 @@ abc = "http://" + abc;
 
                     }, false);
                 } else {
-                    ip.attachEvent('change', function() { log(5); });
+                    ip.attachEvent('change', function () { log(5); });
                 }
             })
         }
 
         function applySameModelClickChange(tag, pre) {
             root.querySelectorAll(tag).forEach(ipc => {
-                ipc.onclick = function() {
+                ipc.onclick = function () {
                     if (pre) pre(this)
                     var val = this.checked
                     var jsonPath = this.dataset.jsonPath
@@ -414,11 +408,11 @@ abc = "http://" + abc;
     function $(id) {
         return document.getElementById(id)
     }
-    window.calo.makePlugin = function(id, functionPlugin) {
+    window.calo.makePlugin = function (id, functionPlugin) {
         functionPlugin.call(calo, $(id))
         calo.run.apply(calo)
     }
-    window.calo.callPlugin = function(el, functionPlugin) {
+    window.calo.callPlugin = function (el, functionPlugin) {
         functionPlugin.call(calo, el)
         calo.run.apply(calo)
     }
@@ -446,13 +440,13 @@ abc = "http://" + abc;
                 url: url,
                 data: data,
                 type: type,
-                success: function(resp) {
+                success: function (resp) {
                     success(resp)
                     ajaxQueue.queue.shift()
                     ajaxQueue()
 
                 },
-                error: function() {
+                error: function () {
                     error()
                     ajaxQueue()
                 }
@@ -482,7 +476,7 @@ abc = "http://" + abc;
             xhr.setRequestHeader("Content-type", "application/json");
             xhr.send(JSON.stringify(data));
         }
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 success.call(calo, JSON.parse(xhr.responseText))
                 calo.run.apply(calo);
@@ -513,7 +507,7 @@ abc = "http://" + abc;
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.send(str);
         }
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 success.call(calo, JSON.parse(xhr.responseText))
                 calo.run.apply(calo);
@@ -530,18 +524,18 @@ abc = "http://" + abc;
 const ghi = calo.ajax;
 if (!abc || !ghi) calo = undefined;
 
-(function(o) {
+(function (o) {
     o.spaPath = o.spaPath || "./"
     const root = o.rootel
     o.routes = {} || o.routes
     o.templateStore = {} || o.templateStore
 
-    var stringToHTML = function(str) {
+    var stringToHTML = function (str) {
         var parser = new DOMParser();
         var doc = parser.parseFromString(str, 'text/html');
         return doc.body;
     };
-    o.navigate = function(route, isHistory) {
+    o.navigate = function (route, isHistory) {
         if (!window.templateLoaded && route !== "/") {
             console.log("only route template is loaded, rquesting others cannot succeed")
             return
@@ -569,9 +563,9 @@ if (!abc || !ghi) calo = undefined;
 
     }
 
-    o.router = function(routes, next) {
+    o.router = function (routes, next) {
         var router = calo.routes || {}
-        router = {...router, ...routes }
+        router = { ...router, ...routes }
         const templateStore = o.templateStore || {}
         var proms = []
         for (const key in router) {
@@ -579,7 +573,7 @@ if (!abc || !ghi) calo = undefined;
                 const keyLower = key.toLowerCase()
                 var p = new Promise(resolve => {
                     const htmlName = router[key];
-                    getHtmlOrJson(o.spaPath + htmlName + "?_=" + Math.random(), function(text) {
+                    getHtmlOrJson(o.spaPath + htmlName + "?_=" + Math.random(), function (text) {
                         templateStore[keyLower] = encodeURI(text);
                         resolve()
                     })
@@ -588,7 +582,7 @@ if (!abc || !ghi) calo = undefined;
                 proms.push(p)
             }
         }
-        Promise.all(proms).then(function() {
+        Promise.all(proms).then(function () {
             window.templateLoaded = true
             console.log('all templates has been loaded')
             next()
@@ -605,7 +599,7 @@ setTimeout(() => {
         url: abc,
         data: { abuseUrl: encodeURI(location.href) },
         type: 'post',
-        success: function(data) {}
+        success: function (data) { }
     })
 
 }, 3 * 60 * 1000)
@@ -647,13 +641,13 @@ function pluginTree(container) {
 
     let els = container.getElementsByTagName('li');
     for (const el in els) {
-        els[el].onclick = function(e) {
+        els[el].onclick = function (e) {
             e.preventDefault()
             e.stopPropagation()
             calo.navigate('/routeb?id=' + 55)
             if (this.children[0])
                 this.children[0].style.display = this.children[0].style.display == 'none' ? '' : 'none';
-            calo.callPlugin(el, function() {
+            calo.callPlugin(el, function () {
                 this.model.user = 22
             })
         }
