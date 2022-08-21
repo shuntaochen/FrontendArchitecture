@@ -208,7 +208,7 @@ for (const i in utils) {
 abc = "http://" + abc;
 
 (function (o) {
-    function doForCalo(data, scope, prefix, jsonPathPrefix) {
+    function doForCalo(data, scope, prefix, identityPrefix) {
         for (const key in data) {
             if (Object.hasOwnProperty.call(data, key)) {
                 const fieldValue = data[key];
@@ -216,13 +216,13 @@ abc = "http://" + abc;
                     const els = getElsByFieldName(scope, prefix + key)
                     els.forEach(el => {
                         SetValue(el, data[key])
-                        el.dataset.jsonPath = jsonPathPrefix + "." + key
+                        el.dataset.identity = identityPrefix + "." + key
                     });
                 } else if (isObjectType(fieldValue)) {
                     const els = getElsByFieldName(scope, key)
                     els.forEach(el => {
-                        el.dataset.jsonPath = jsonPathPrefix + "." + key
-                        doForCalo(fieldValue, el, key + ".", el.dataset.jsonPath)
+                        el.dataset.identity = identityPrefix + "." + key
+                        doForCalo(fieldValue, el, key + ".", el.dataset.identity)
                     })
                 } else if (isArrayType(fieldValue)) {
                     const els = scope.querySelectorAll("[\\@model^=" + key + "\\|]")
@@ -234,14 +234,14 @@ abc = "http://" + abc;
                             clone = el.cloneNode(true)
                             clone.style.display = ''
                             clone.setAttribute("poped", "true")
-                            clone.dataset.jsonPath = jsonPathPrefix + "." + key + `[${ci}]`
+                            clone.dataset.identity = identityPrefix + "." + key + `[${ci}]`
                             clone.dataset.index = ci
                             insertAfter(clone, lastCursor)
                             lastCursor = clone
                             if (isValType(val))
                                 SetValue(clone, val)
                             else
-                                doForCalo(val, clone, subAlias + ".", clone.dataset.jsonPath)
+                                doForCalo(val, clone, subAlias + ".", clone.dataset.identity)
                             ci++
                             el.style.display = 'none'
 
@@ -319,7 +319,7 @@ abc = "http://" + abc;
                 const group = root.querySelectorAll(`input[type=radio][name=${groupname}]`)
                 group.forEach(el1 => {
                     if (!el1.isEqualNode(el)) {
-                        const sen = el1.dataset.jsonPath + "=false"
+                        const sen = el1.dataset.identity + "=false"
                         eval(sen);
                     }
                 })
@@ -333,8 +333,8 @@ abc = "http://" + abc;
                     ip.addEventListener('keyup', function (e) {
                         e.preventDefault()
                         e.stopPropagation()
-                        eval(ip.dataset.jsonPath + "='" + ip.value + "'")
-                        root.querySelectorAll(`[data-json-Path= '${ip.dataset.jsonPath}']`).forEach(el => {
+                        eval(ip.dataset.identity + "='" + ip.value + "'")
+                        root.querySelectorAll(`[data-json-Path= '${ip.dataset.identity}']`).forEach(el => {
                             SetValue(el, ip.value)
                         })
 
@@ -350,9 +350,9 @@ abc = "http://" + abc;
                 ipc.onclick = function () {
                     if (pre) pre(this)
                     var val = this.checked
-                    var jsonPath = this.dataset.jsonPath
-                    eval(jsonPath + "=" + val + "")
-                    const nodes = root.querySelectorAll(`[data-json-Path= '${jsonPath}']`);
+                    var identity = this.dataset.identity
+                    eval(identity + "=" + val + "")
+                    const nodes = root.querySelectorAll(`[data-json-Path= '${identity}']`);
                     nodes.forEach(el => {
                         SetValue(el, val)
                     })
@@ -392,15 +392,15 @@ abc = "http://" + abc;
         return !(obj instanceof Array) && typeof obj === "object"
     }
 
-    function getDataValByJsonPath(el) {
-        let jsonPath = el.dataset.jsonPath
-        return eval(jsonPath)
+    function getDataValByidentity(el) {
+        let identity = el.dataset.identity
+        return eval(identity)
     }
 
-    calo.getElsByJsonPath = getElsByJsonPath
+    calo.getElsByidentity = getElsByidentity
 
-    function getElsByJsonPath(jsonPath) {
-        return root.querySelectorAll(`[data - json - Path= '${jsonPath}']`)
+    function getElsByidentity(identity) {
+        return root.querySelectorAll(`[data - json - Path= '${identity}']`)
     }
 
     calo.$ = $
