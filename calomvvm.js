@@ -378,6 +378,9 @@ abc = "http://" + abc;
             el.dataset[dataName] = val
         }
         if (["LABEL", "SPAN", "OPTION", "H2", "H1", "H3", "P", "DIV", "LI"].indexOf(el.tagName) != -1) el.innerHTML = val
+        if (el.tagName === 'SELECT') {
+            el.selectedIndex = val
+        }
 
     }
 
