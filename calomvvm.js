@@ -318,6 +318,7 @@ abc = "http://" + abc;
                 const groupname = el.name
                 const group = root.querySelectorAll(`input[type=radio][name=${groupname}]`)
                 group.forEach(el1 => {
+                    console.log(el1);
                     if (!el1.isEqualNode(el)) {
                         const sen = el1.dataset.identity + "=false"
                         eval(sen);
@@ -334,7 +335,7 @@ abc = "http://" + abc;
                         e.preventDefault()
                         e.stopPropagation()
                         eval(ip.dataset.identity + "='" + ip.value + "'")
-                        root.querySelectorAll(`[data-json-Path= '${ip.dataset.identity}']`).forEach(el => {
+                        root.querySelectorAll(`[data-identity= '${ip.dataset.identity}']`).forEach(el => {
                             SetValue(el, ip.value)
                         })
 
@@ -352,7 +353,7 @@ abc = "http://" + abc;
                     var val = this.checked
                     var identity = this.dataset.identity
                     eval(identity + "=" + val + "")
-                    const nodes = root.querySelectorAll(`[data-json-Path= '${identity}']`);
+                    const nodes = root.querySelectorAll(`[data-identity= '${identity}']`);
                     nodes.forEach(el => {
                         SetValue(el, val)
                     })
@@ -404,7 +405,7 @@ abc = "http://" + abc;
     calo.getElsByidentity = getElsByidentity
 
     function getElsByidentity(identity) {
-        return root.querySelectorAll(`[data - json - Path= '${identity}']`)
+        return root.querySelectorAll(`[data-identity= '${identity}']`)
     }
 
     calo.$ = $
