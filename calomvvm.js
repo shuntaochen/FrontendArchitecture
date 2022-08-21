@@ -222,7 +222,7 @@ abc = "http://" + abc;
                     const els = getElsByFieldName(scope, key)
                     els.forEach(el => {
                         el.dataset.identity = identityPrefix + "." + key
-                        doForCalo(fieldValue, el, key + ".", el.dataset.identity)
+                        doForCalo(fieldValue, el, "", el.dataset.identity)
                     })
                 } else if (isArrayType(fieldValue)) {
                     const els = scope.querySelectorAll("[\\@model^=" + key + "\\|]")
