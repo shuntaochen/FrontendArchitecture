@@ -372,7 +372,11 @@ abc = "http://" + abc;
         if (el.tagName === "A") el.href = val
         if (el.tagName === "INPUT" && el.type === "checkbox") el.checked = val
         if (el.tagName === "INPUT" && el.type === "radio") el.checked = val
-        if (["LABEL", "SPAN", "BUTTON", "OPTION", "H2", "H1", "H3", "P", "DIV", "LI"].indexOf(el.tagName) != -1) el.innerHTML = val
+        if (el.tagName === "BUTTON") {
+            const dataName = el.getAttribute("@model")
+            el.dataset[dataName] = val
+        }
+        if (["LABEL", "SPAN", "OPTION", "H2", "H1", "H3", "P", "DIV", "LI"].indexOf(el.tagName) != -1) el.innerHTML = val
 
     }
 
