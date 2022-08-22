@@ -368,9 +368,9 @@ abc = "http://" + abc;
         function applySameModelSelectChange() {
             root.querySelectorAll("Select").forEach(ipc => {
                 ipc.onchange = function () {
-                    const selected = this.selectedIndex
+                    const selected = this.value
                     var identity = this.dataset.identity
-                    eval(identity + "=" + selected + "")
+                    eval(identity + "='" + selected + "'")
                     const nodes = root.querySelectorAll(`[data-identity= '${identity}']`);
                     nodes.forEach(el => {
                         SetValue(el, selected)
@@ -397,7 +397,7 @@ abc = "http://" + abc;
         }
         if (["LABEL", "SPAN", "OPTION", "H2", "H1", "H3", "P", "DIV", "LI"].indexOf(el.tagName) != -1) el.innerHTML = val
         if (el.tagName === 'SELECT') {
-            el.selectedIndex = val
+            el.value = val
         }
 
     }
