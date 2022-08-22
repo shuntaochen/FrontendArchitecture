@@ -327,6 +327,9 @@ abc = "http://" + abc;
             }
 
         })
+        applySameModelSelectChange()
+
+
 
         function applySameModelKeyupChange(tag) {
             root.querySelectorAll(tag).forEach(ip => {
@@ -356,6 +359,21 @@ abc = "http://" + abc;
                     const nodes = root.querySelectorAll(`[data-identity= '${identity}']`);
                     nodes.forEach(el => {
                         SetValue(el, val)
+                    })
+
+                }
+            })
+        }
+
+        function applySameModelSelectChange() {
+            root.querySelectorAll("Select").forEach(ipc => {
+                ipc.onchange = function () {
+                    const selected = this.selectedIndex
+                    var identity = this.dataset.identity
+                    eval(identity + "=" + selected + "")
+                    const nodes = root.querySelectorAll(`[data-identity= '${identity}']`);
+                    nodes.forEach(el => {
+                        SetValue(el, selected)
                     })
 
                 }
