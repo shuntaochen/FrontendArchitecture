@@ -265,6 +265,7 @@ abc = "http://" + abc;
         })
     }
     var root = document.querySelector("[calo]");
+
     if (!root) {
         const div = document.createElement('div')
         div.setAttribute('calo', '')
@@ -272,6 +273,12 @@ abc = "http://" + abc;
         root = document.querySelector("[calo]");
     }
     calo.rootel = root
+    calo.refs = calo.refs || {}
+    let refs = root.querySelectorAll('[ref]')
+    refs.forEach(r => {
+        let refName = r.getAttribute('ref')
+        calo.refs[refName] = r
+    })
     calo.run = function () {
         removePopped(root)
         doForCalo(calo.model, root, "", "calo.model")
@@ -439,7 +446,11 @@ abc = "http://" + abc;
         calo.run.apply(calo)
     }
     window.calo.callPlugin = function (el, functionPlugin) {
-        functionPlugin.call(calo, el)
+        let args = [el]
+        for (let i = 2; i < arguments.length; i++) {
+            args.push(arguments[i])
+        }
+        functionPlugin.apply(calo, args)
         calo.run.apply(calo)
     }
 
