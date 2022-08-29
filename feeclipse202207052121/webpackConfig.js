@@ -70,7 +70,8 @@ function getConfig(entry, settings, output, plugins) {
             //jquery: 'jquery'//use CDN instead maybe, so activate this,
         },
         output: output,
-        plugins: [new MiniCssExtractPlugin(),
+        plugins: [
+            new MiniCssExtractPlugin(),
             wdp, ...plugins],
         module: {
             rules: [
@@ -108,8 +109,8 @@ function getConfig(entry, settings, output, plugins) {
                     }
                 },
                 {
-                    test: /\.css$/i,
-                    use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                    test: /\.(sa|sc|c)ss$/i,
+                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
                 },
                 // {
                 //     test: /\.(png|jpg|gif)$/i,
