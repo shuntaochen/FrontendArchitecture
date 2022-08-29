@@ -44,5 +44,9 @@
     "uglify-js": "^3.16.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.73.0"
+  },
+  "dependencies": {
+    "node-sass": "^7.0.1",
+    "sass-loader": "^13.0.2"
   }
 }
