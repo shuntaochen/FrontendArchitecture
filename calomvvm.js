@@ -208,7 +208,7 @@ for (const i in utils) {
 abc = "http://" + abc;
 
 (function (o) {
-    function doForCalo(data, scope, prefix, identityPrefix) {
+    function renderObject(data, scope, prefix, identityPrefix) {
         for (const key in data) {
             if (Object.hasOwnProperty.call(data, key)) {
                 const fieldValue = data[key];
@@ -222,12 +222,12 @@ abc = "http://" + abc;
                     const els = getElsByFieldName(scope, key)
                     els.forEach(el => {
                         el.dataset.identity = identityPrefix + "." + key
-                        doForCalo(fieldValue, el, "", el.dataset.identity)
+                        renderObject(fieldValue, el, "", el.dataset.identity)
                     })
                 } else if (isArrayType(fieldValue)) {
-                    const els = scope.querySelectorAll("[\\@model^=" + key + "\\|]")
+                    const els = scope.querySelectorAll("[\\@field^=" + key + "\\|]")
                     els.forEach(el => {
-                        const subAlias = el.getAttribute("@model").split('|')[1]
+                        const subAlias = el.getAttribute("@field").split('|')[1]
                         let ci = 0
                         let lastCursor = el
                         fieldValue.forEach(val => {
@@ -241,7 +241,7 @@ abc = "http://" + abc;
                             if (isValType(val))
                                 SetValue(clone, val)
                             else
-                                doForCalo(val, clone, subAlias + ".", clone.dataset.identity)
+                                renderObject(val, clone, subAlias + ".", clone.dataset.identity)
                             ci++
                             el.style.display = 'none'
 
@@ -281,7 +281,7 @@ abc = "http://" + abc;
     })
     calo.run = function () {
         removePopped(root)
-        doForCalo(calo.model, root, "", "calo.model")
+        renderObject(calo.model, root, "", "calo.model")
         var clicks = root.querySelectorAll("[\\@Click]")
         var changes = root.querySelectorAll("[\\@Change]")
         var links = document.querySelectorAll("[\\@Link]")
@@ -399,7 +399,7 @@ abc = "http://" + abc;
         if (el.tagName === "INPUT" && el.type === "checkbox") el.checked = val
         if (el.tagName === "INPUT" && el.type === "radio") el.checked = val
         if (el.tagName === "BUTTON") {
-            const dataName = el.getAttribute("@model")
+            const dataName = el.getAttribute("@field")
             el.dataset[dataName] = val
         }
         if (["LABEL", "SPAN", "OPTION", "H2", "H1", "H3", "P", "DIV", "LI"].indexOf(el.tagName) != -1) el.innerHTML = val
@@ -410,7 +410,7 @@ abc = "http://" + abc;
     }
 
     function getElsByFieldName(scope, fieldName) {
-        return scope.querySelectorAll("[\\@model='" + fieldName + "'")
+        return scope.querySelectorAll("[\\@field='" + fieldName + "'")
     }
 
     function isValType(obj) {
@@ -664,16 +664,16 @@ function pluginTree(container) {
     }
     nodes.push({ id: 5, pid: 2, name: 'node5' })
 
-    function doForCalo(node, nodes) {
+    function renderObject(node, nodes) {
         var csh = ''
         nodes.filter(n => { return n.pid == node.id }).forEach(
             c => {
-                csh += `<li>${c.name}${doForCalo(c, nodes)}</li>`
+                csh += `<li>${c.name}${renderObject(c, nodes)}</li>`
             }
         )
         return csh == '' ? '' : `<ul>${csh}</ul>`
     }
-    let obj = doForCalo({ id: null }, nodes)
+    let obj = renderObject({ id: null }, nodes)
     container.innerHTML = obj
 
     let els = container.getElementsByTagName('li');
