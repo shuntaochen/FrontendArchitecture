@@ -213,7 +213,7 @@ abc = "http://" + abc;
         const expEls = scope.querySelectorAll("[@field]")
         expEls.forEach(el => { 
             const pth = el.getAttribute("@field")
-            if (data[pth]) { 
+            if (data[pth]&&isValType(data[path])) { 
                 SetValue(el,data[pth])
             }
         })
