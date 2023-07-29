@@ -209,11 +209,21 @@ abc = "http://" + abc;
 
 (function (o) {
     function renderObject(data, scope, prefix, identityPrefix) {
+        //以scope为主，获取所有scope下的field, 根本表达式渲染所有下级
+        const expEls = scope.querySelectorAll("[@field]")
+        expEls.forEach(el => { 
+            const pth = el.getAttribute("@field")
+            if (data[pth]) { 
+                SetValue(el,data[pth])
+            }
+        })
+
+        //以data为主开始做下层递归渲染
         for (const key in data) {
-            if (Object.hasOwnProperty.call(data, key)) {
+            if (Object.hasOwnProperty.call(data, key)) {//根据对象层层加前缀为下级赋值； 还有，如果会漏掉直接写的级联的情况，在每一次给对象赋值开始之前，除了key的情况，还有直接表达式的情况，那么此处，先取到所有scope里的所有field,根据field直接看当前scope是否有值，有就赋上；
                 const fieldValue = data[key];
                 if (isValType(fieldValue)) {
-                    const els = getElsByFieldName(scope, prefix + key)
+                    const els = getElsByFieldName(scope, prefix + key)//scope在层层缩小，那么每次scope缩小之后，每一次设值，先设置级联的表达式的值，scope
                     els.forEach(el => {
                         SetValue(el, data[key])
                         el.dataset.identity = identityPrefix + "." + key
